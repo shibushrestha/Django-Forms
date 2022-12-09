@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import EmailValidator, RegexValidator
-from .models import UserProfile
 
 # You can write custom validators like this:
 # This can be usesful when you to apply custom logic for validation.
@@ -65,16 +64,17 @@ class UserRegisterForm(forms.Form):
         },
         widget=forms.PasswordInput(attrs={
             'placeholder':"Enter a password"
-        })
+        }),
+        help_text="You password must contain Capital case , numbers and symbols."
     )
     password2 = forms.CharField(max_length=32, required=True,
         label="Password Confirmation",
         error_messages={
             'required':'Enter same password as above'
-    },
-    widget=forms.PasswordInput(attrs={
-        'placeholder':'Enter the same password as above.'
-    })
+        },
+        widget=forms.PasswordInput(attrs={
+                'placeholder':'Enter the same password as above.'
+        })
     )
 
     # Define clean method on a specific field
@@ -98,8 +98,6 @@ class UserRegisterForm(forms.Form):
 
 
 
-
-
 class StudentForm(forms.Form):
     YEAR_IN_SCHOOL =[
         ("FR", "Freshman"),
@@ -116,13 +114,19 @@ class StudentForm(forms.Form):
 
 
 
-# Fields which handles relationship
-# This is the example for field which handles relationship
-# In the model UserProfile, the userprofile has ForeignKey relation to the User
-# So this is how you deal with the ForeignKey field in the forms using forms.ModelChoiceField
-# Remember to provide the queryset 
+
 class UserProfileForm(forms.Form):
+    # when you render a form {{ form }} in a template, the default name user to render a form is 'django/forms/default.html',
+    # which is a proxy for 'django/forms/table.html'. So a form render in a template will be a table.
+    # You can control this by creating an appropriate template and setting a custom FORM_RENDERER to use that template
+    # to use site-wide. or 
+    # you provide a template_name in the form class like below to use it in a single form like below
     template_name = "Djangoforms/form_snippets.html"
+    # Fields which handles relationship
+    # This is the example for field which handles relationship
+    # In the model UserProfile, the userprofile has ForeignKey relation to the User
+    # So this is how you deal with the ForeignKey field in the forms using forms.ModelChoiceField
+    # Remember to provide the queryset 
     user = forms.ModelChoiceField(queryset=None,)
     address = forms.CharField(max_length=100)
     date_of_birth = forms.DateField()

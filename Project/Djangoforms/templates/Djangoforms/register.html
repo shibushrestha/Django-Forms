@@ -10,38 +10,62 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
+        <!--
+            You don't have to let django unpack the form's field, we can do it manually if we like( allowing us 
+            to reorder fields, for example). Each field is available as an attribute of the form using 
+            {{ form.name_of_field }}
+            for example:
+        -->
         <form action="/Djangoforms/register/" method="post" novalidate>
             {% csrf_token %}
-            {{ form.errors.username }}
-            {{ form.username.label }}
-            {{ form.username }}
-            <br><br>
+            <div class="fieldWrapper">
+                <!--
+                    A form's field errors is displayed using {{ form.name_of_field.errors }}, rendered as an unordered list.
+                    This might look something like this
+                    <ul class="errorlist">
+                        <li>Username already taken.</li>
+                    </ul>
+                    This has a css class of errorlist to allow you to style its apperance.
+                -->
+                {{ form.username.errors }}
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            <div>
+            <br>
+            <div class="fieldWrapper">
+                {{ form.first_name.errors }}
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+            </div>
+            <br>
+            <div class="fieldWrapper">
+                {{ form.last_name.errors }}
+                {{ form.last_name.label_tag }}
+                {{ form.last_name}}
+            </div>
+            <br>
+            <div class="fieldWrapper">
 
-            {{ form.errors.first_name}}
-            {{ form.first_name.label }}
-            {{ form.first_name }}
-            <br><br>
-
-            {{ form.errors.last_name }}
-            {{ form.last_name.label }}
-            {{ form.last_name}}
-            <br><br>
-
-            {{ form.errors.email }}
-            {{ form.email.label }}
-            {{ form.email }}
-            <br><br>
-
-            {{ form.non_field_errors }}
-            {{ form.errors.password1 }}
-            {{ form.password1.label }}
-            {{ form.password1 }}
-            <br><br>
-
-            {{ form.errors.password2 }}
-            {{ form.password2.label }}
-            {{ form.password2 }}
-            <br><br>
+                {{ form.email.errors }}
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+            <br>
+            <div class="fieldWrapper">
+                <!-- Errors which are not specific to foelds are non field errors and they are displayed as
+                {{ form.non_field_errors }}-->
+                {{ form.non_field_errors }}
+                {{ form.password1.errors }}
+                {{ form.password1.label_tag }}
+                {{ form.password1 }} {{ form.password1.help_text }}
+            </div>
+            <br>
+            <div class="fieldWrapper">
+                {{ form.password2.errors }}
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+            </div>
+            <br>
             
             <input type="submit" value="Register">
         </form>
