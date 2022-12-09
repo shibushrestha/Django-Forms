@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <form action="/Djangoforms/student-register/" method="post">
+        <form action="/Djangoforms/student-register/" method="post" novalidate>
             {% csrf_token %}
             {{ form }}
             <input type="submit" value="Register">

@@ -65,7 +65,7 @@ class UserRegisterForm(forms.Form):
         widget=forms.PasswordInput(attrs={
             'placeholder':"Enter a password"
         }),
-        help_text="You password must contain Capital case , numbers and symbols."
+        help_text="Your password must contain Capital case , numbers and symbols."
     )
     password2 = forms.CharField(max_length=32, required=True,
         label="Password Confirmation",
@@ -106,7 +106,8 @@ class StudentForm(forms.Form):
         ("JR", "Junior"),
         ("SR", "Senior")
     ]
-    name = forms.CharField(max_length=100)
+    # Initial value are being used as fallback value and I don't know why?
+    name = forms.CharField(max_length=100, initial="Piyush chaudhary") 
     # You can use the forms.ChoiceField for choice inputs like in the comment below
     # year_in_school = forms.ChoiceField(choices=YEAR_IN_SCHOOL)
     # or you can use form.ChaField and provide the choice in the widget like so:
@@ -116,12 +117,13 @@ class StudentForm(forms.Form):
 
 
 class UserProfileForm(forms.Form):
-    # when you render a form {{ form }} in a template, the default name user to render a form is 'django/forms/default.html',
+    # when you render a form {{ form }} in a template, the default FORM_RENDERER is django/forms/renderers/DjangoTemplates.
+    #  form when render as default is 'django/forms/default.html',
     # which is a proxy for 'django/forms/table.html'. So a form render in a template will be a table.
     # You can control this by creating an appropriate template and setting a custom FORM_RENDERER to use that template
     # to use site-wide. or 
     # you provide a template_name in the form class like below to use it in a single form like below
-    template_name = "Djangoforms/form_snippets.html"
+    template_name = "Django/forms/div.html"    # you can also use custom template "Djangoforms/form_snippets.html"
     # Fields which handles relationship
     # This is the example for field which handles relationship
     # In the model UserProfile, the userprofile has ForeignKey relation to the User
@@ -136,3 +138,12 @@ class UserProfileForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['user'].queryset = User.objects.all()
         
+    # You can also add errors to specific form's field with form.add_error within the form.clean() method like below:
+    # Or you can do it outside of the form  for example in the views
+    def clean(self):
+        cleaned_data = super().clean()
+        contact_number = cleaned_data.get('contact_number')
+        if contact_number and contact_number == 9823133530:
+            error = ValidationError(_("You cannot use this contact number"), code="not allowed")
+            self.add_error('contact_number', error)
+        return cleaned_data

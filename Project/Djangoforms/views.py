@@ -30,6 +30,8 @@ def register_user(request):
 
 def student_register(request):
     form = StudentForm()
+    # For singlerender of form instance you can pass template_name to the Form.render() method
+    rendered_form = form.render("Djangoforms/form_snippets.html")
     if request.method == "POST":
         form = StudentForm(request.POST)
         if form.is_valid():
@@ -38,12 +40,13 @@ def student_register(request):
 
             student = Student.objects.create(name=name, year_in_school=year_in_school)
             return redirect('/Djangoforms/')
-    return render(request, 'Djangoforms/student-register.html', {'form':form})
+    return render(request, 'Djangoforms/student-register.html', {'form':rendered_form})
 
 
 
 def userprofile(request):
-    form = UserProfileForm()
+    # Initial value is being used as fallback value and I don't know why?
+    form = UserProfileForm(initial={'address':"Samakhushi"})
     if request.method == "POST":
         form = UserProfileForm(request.POST)
         if form.is_valid():

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
     'Djangoforms',
 ]
 
@@ -122,3 +123,23 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# You can change the default FORM_RENDERER in settings.py form globally altering the rendering of for 
+
+# FORM_RENDERER = "django.forms.renderers.DjangoDivFormRenderer" # This will render form elements as div (django/forms/div.html)
+
+
+
+# Custom Renderer to render the form
+# You should have 'django.forms' in INSTALLED_APPS for this to work
+# See the document for django.forms.renderers.TemplateSettings
+'''
+from django.forms.renderers import TemplatesSetting
+
+class CustomFormRenderer(TemplatesSetting):
+    form_template_name = "Djangoforms/form_snippets.html"
+
+FORM_RENDERER = "Project.settings.CustomFormRenderer"
+'''
