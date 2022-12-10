@@ -7,14 +7,16 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'Djangoforms/UserProfileForm.css'%}">
     </head>
     <body>
-        <form action="/Djangoforms/userprofile/" method="post" novalidate>
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Update">
-        </form>
+        
+            <form action="/Djangoforms/userprofile/" method="post" novalidate>
+                {% csrf_token %}
+                {{ form }}
+                <button class="btn-submit" type="submit">Update</button>
+            </form>
         
         <script src="" async defer></script>
     </body>

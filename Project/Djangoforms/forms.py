@@ -147,3 +147,8 @@ class UserProfileForm(forms.Form):
             error = ValidationError(_("You cannot use this contact number"), code="not allowed")
             self.add_error('contact_number', error)
         return cleaned_data
+
+    class Media:
+        css = {
+            'all':('UserProfileForm.css',)
+        }

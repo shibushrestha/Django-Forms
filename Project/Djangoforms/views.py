@@ -30,7 +30,7 @@ def register_user(request):
 
 def student_register(request):
     form = StudentForm()
-    # For singlerender of form instance you can pass template_name to the Form.render() method
+    # For single render of form instance you can pass template_name to the Form.render() method
     rendered_form = form.render("Djangoforms/form_snippets.html")
     if request.method == "POST":
         form = StudentForm(request.POST)
