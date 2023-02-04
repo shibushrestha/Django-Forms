@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        {% load static %}
+    </head>
+    <body>
+        <form action="{% url 'add-students' %}" method="post">
+            {% csrf_token %}
+            {{ student_formset.management_form }}
+            {{ student_formset.non_form_errors }}
+            {% for forms in student_formset %}
+                
+                {% for fields in forms %}
+                    {{fields.errors }}
+                    {{fields.label_tag}} {{ fields }}<br><br>                    
+                {% endfor %}
+                    
+            {% endfor %}
+            <input type="submit" value="Save">
+        </form>
+        
+        <script src="" async defer></script>
+    </body>
+</html>

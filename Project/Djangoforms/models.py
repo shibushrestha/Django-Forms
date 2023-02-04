@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class Student(models.Model):
     YEAR_IN_SCHOOL =[
+        (None, "---------"),
         ("FR", "Freshman"),
         ("SO", "Sophomore"),
         ("GR", "Graduate"),
@@ -24,3 +25,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+
+

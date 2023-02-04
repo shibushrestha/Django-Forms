@@ -1,8 +1,11 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .forms import UserRegisterForm, StudentForm, UserProfileForm
-
 from django.contrib.auth.models import User
+
 from .models import Student, UserProfile
+from .forms import UserRegisterForm, StudentForm, UserProfileForm
+from .modelforms import UserRegistrationForm
+from .formsets import StudentFormset
 
 def home(request):
     return render(request, 'Djangoforms/home.html')
@@ -35,10 +38,7 @@ def student_register(request):
     if request.method == "POST":
         form = StudentForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data.get('name')
-            year_in_school = form.cleaned_data.get('year_in_school')
-
-            student = Student.objects.create(name=name, year_in_school=year_in_school)
+            form.save()
             return redirect('/Djangoforms/')
     return render(request, 'Djangoforms/student-register.html', {'form':rendered_form})
 
@@ -65,3 +65,34 @@ def userprofile(request):
             return redirect("/Djangoforms/")
 
     return render(request, 'Djangoforms/userprofile.html', {'form':form})
+
+
+
+# This view uses the ModelForm from modelforms.py
+
+def user_registration(request):
+    form = UserRegistrationForm()
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("/Djangoforms/")
+    return render(request, 'Djangoforms/user_registration.html', {'form':form})
+
+
+# This view is for the StudentFormset
+
+def add_students(request):
+    students_list = Student.objects.all().values('name', 'year_in_school')
+    print(students_list)
+    student_formset = StudentFormset(initial=students_list)
+    if request.method == 'POST':
+        student_formset = StudentFormset(request.POST, initial=students_list)
+        if student_formset.is_valid():
+            for form in student_formset:
+                if form.has_changed():
+                    if not form.is_valid():
+                        return render(request, 'Djangoforms/add_students.html', {'student_formset':student_formset})
+                    form.save()
+            return redirect('/Djangoforms/')  
+    return render(request, 'Djangoforms/add_students.html', {'student_formset':student_formset})

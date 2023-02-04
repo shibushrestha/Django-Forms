@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import EmailValidator, RegexValidator
 
+from .models import Student, UserProfile
+
 # You can write custom validators like this:
 # This can be usesful when you to apply custom logic for validation.
 # This validator checks the uniqueness of username with respect to the User model.
@@ -100,6 +102,7 @@ class UserRegisterForm(forms.Form):
 
 class StudentForm(forms.Form):
     YEAR_IN_SCHOOL =[
+        (None, "---------"),
         ("FR", "Freshman"),
         ("SO", "Sophomore"),
         ("GR", "Graduate"),
@@ -107,11 +110,16 @@ class StudentForm(forms.Form):
         ("SR", "Senior")
     ]
     # Initial value are being used as fallback value and I don't know why?
-    name = forms.CharField(max_length=100, initial="Piyush chaudhary") 
+    name = forms.CharField(max_length=100, ) 
     # You can use the forms.ChoiceField for choice inputs like in the comment below
     # year_in_school = forms.ChoiceField(choices=YEAR_IN_SCHOOL)
     # or you can use form.ChaField and provide the choice in the widget like so:
     year_in_school = forms.CharField(max_length=2, widget=forms.Select(choices=YEAR_IN_SCHOOL))
+
+    def save(self):
+        name = self.cleaned_data.get('name')
+        year_in_school = self.cleaned_data.get('year_in_school')
+        student = Student.objects.create(name=name, year_in_school=year_in_school)
 
 
 
@@ -143,7 +151,7 @@ class UserProfileForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         contact_number = cleaned_data.get('contact_number')
-        if contact_number and contact_number == 9823133530:
+        if contact_number and UserProfile.objects.filter(contact_number=contact_number).exists():
             error = ValidationError(_("You cannot use this contact number"), code="not allowed")
             self.add_error('contact_number', error)
         return cleaned_data
