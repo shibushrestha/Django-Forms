@@ -1,0 +1,12 @@
+Core field arguments
+
+required
+label
+label_suffix
+initial
+widget
+help_text
+error_messages
+validators
+localize
+disabled
