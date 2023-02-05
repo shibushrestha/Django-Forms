@@ -1,11 +1,9 @@
-# We will use the 'User' model form django.contrib.auth.models for ModelFormPractice
-
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-
+# We will use the 'User' model form django.contrib.auth.models for ModelFormPractice
 class UserRegistrationForm(forms.ModelForm):
     password2 = forms.CharField(max_length=100, widget=forms.PasswordInput(attrs={'placeholder':"Confirm password"}), required=True)
     def __init__(self, *args, **kwargs):

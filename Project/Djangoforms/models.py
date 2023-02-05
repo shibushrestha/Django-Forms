@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# We are using this model in the formset too.
 class Student(models.Model):
     YEAR_IN_SCHOOL =[
         (None, "---------"),
@@ -25,7 +26,3 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-
-
-

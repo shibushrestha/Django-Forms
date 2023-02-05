@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .models import Student, UserProfile
 from .forms import UserRegisterForm, StudentForm, UserProfileForm
 from .modelforms import UserRegistrationForm
-from .formsets import StudentFormset
+from .formsets import StudentFormset, StudentFormset1
 
 def home(request):
     return render(request, 'Djangoforms/home.html')
@@ -14,7 +14,7 @@ def home(request):
 def register_user(request):
     form = UserRegisterForm()
     if request.method == "POST":
-        form = UserRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST,)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             first_name = form.cleaned_data.get('first_name')
@@ -32,15 +32,17 @@ def register_user(request):
 
 
 def student_register(request):
-    form = StudentForm()
+    form = StudentForm(initial={'name':'Shibu Shrestha', 'year_in_school':'FR'})
     # For single render of form instance you can pass template_name to the Form.render() method
-    rendered_form = form.render("Djangoforms/form_snippets.html")
+    # rendered_form = form.render("Djangoforms/form_snippets.html",)
+    print(form.is_valid())
     if request.method == "POST":
-        form = StudentForm(request.POST)
+        form = StudentForm(request.POST,)
+        print(form.is_valid())
         if form.is_valid():
             form.save()
             return redirect('/Djangoforms/')
-    return render(request, 'Djangoforms/student-register.html', {'form':rendered_form})
+    return render(request, 'Djangoforms/student-register.html', {'form': form})
 
 
 
@@ -60,7 +62,6 @@ def userprofile(request):
                 date_of_birth = date_of_birth,
                 contact_number = contact_number
             )
-    
 
             return redirect("/Djangoforms/")
 
@@ -71,7 +72,8 @@ def userprofile(request):
 # This view uses the ModelForm from modelforms.py
 
 def user_registration(request):
-    form = UserRegistrationForm()
+    user = request.user
+    form = UserRegistrationForm(instance=user)
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -81,18 +83,16 @@ def user_registration(request):
 
 
 # This view is for the StudentFormset
-
 def add_students(request):
-    students_list = Student.objects.all().values('name', 'year_in_school')
-    print(students_list)
-    student_formset = StudentFormset(initial=students_list)
+    student_formset = StudentFormset1(prefix='student',)
     if request.method == 'POST':
-        student_formset = StudentFormset(request.POST, initial=students_list)
+        student_formset = StudentFormset1(request.POST, prefix='student', error_messages={'too_few_forms': 'You must at least submit one form.'})
         if student_formset.is_valid():
-            for form in student_formset:
+            for form in student_formset.forms:
                 if form.has_changed():
-                    if not form.is_valid():
+                    if form.is_valid():
+                        form.save()
+                    else:
                         return render(request, 'Djangoforms/add_students.html', {'student_formset':student_formset})
-                    form.save()
-            return redirect('/Djangoforms/')  
+            return redirect('/Djangoforms/')
     return render(request, 'Djangoforms/add_students.html', {'student_formset':student_formset})

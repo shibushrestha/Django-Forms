@@ -35,8 +35,8 @@ class UserRegisterForm(forms.Form):
     )
     first_name = forms.CharField(max_length=100,
         required=True,
-            error_messages={
-        'required':'This field must be filled out.'
+        error_messages={
+            'required':'This field must be filled out.'
         },
         widget=forms.TextInput(attrs={
             'placeholder':'Enter your first name'
@@ -110,11 +110,12 @@ class StudentForm(forms.Form):
         ("SR", "Senior")
     ]
     # Initial value are being used as fallback value and I don't know why?
-    name = forms.CharField(max_length=100, ) 
+    name = forms.CharField(max_length=100, error_messages={'required':'Enter a student name'}) 
     # You can use the forms.ChoiceField for choice inputs like in the comment below
     # year_in_school = forms.ChoiceField(choices=YEAR_IN_SCHOOL)
     # or you can use form.ChaField and provide the choice in the widget like so:
-    year_in_school = forms.CharField(max_length=2, widget=forms.Select(choices=YEAR_IN_SCHOOL))
+    year_in_school = forms.CharField(max_length=2, widget=forms.Select(choices=YEAR_IN_SCHOOL), error_messages={
+        'required':'You must select an option.'})
 
     def save(self):
         name = self.cleaned_data.get('name')

@@ -127,7 +127,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-# You can change the default FORM_RENDERER in settings.py form globally altering the rendering of for 
+# You can change the default FORM_RENDERER in settings.py, globally altering the rendering of forms
 
 # FORM_RENDERER = "django.forms.renderers.DjangoDivFormRenderer" # This will render form elements as div (django/forms/div.html)
 

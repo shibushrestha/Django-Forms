@@ -11,17 +11,21 @@
         {% load static %}
     </head>
     <body>
-        <form action="{% url 'add-students' %}" method="post">
+        <form action="{% url 'add-students' %}" method="post" novalidate>
             {% csrf_token %}
             {{ student_formset.management_form }}
             {{ student_formset.non_form_errors }}
             {% for forms in student_formset %}
-                
-                {% for fields in forms %}
-                    {{fields.errors }}
-                    {{fields.label_tag}} {{ fields }}<br><br>                    
-                {% endfor %}
+                    {{ forms.errors.name }}
+                    {{ forms.name.label_tag }} {{ forms.name }}<br><br>
+
+                    {{ forms.errors.email }}
+                    {{ forms.email.label_tag }} {{forms.email }} <br><br>
                     
+                    {{ forms.year_in_school.errors}}
+                    {{ forms.year_in_school.label_tag }} {{ forms.year_in_school }}<br><br>
+
+                    {{ forms.DELETE }} <span>Delete this form</span>  <br><br>
             {% endfor %}
             <input type="submit" value="Save">
         </form>
