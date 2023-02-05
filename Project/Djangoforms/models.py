@@ -12,6 +12,7 @@ class Student(models.Model):
         ("SR", "Senior")
     ]
     name = models.CharField(max_length=100,)
+    email = models.EmailField(max_length=254)
     year_in_school = models.CharField(max_length=2 , choices=YEAR_IN_SCHOOL)
 
     def __str__(self):

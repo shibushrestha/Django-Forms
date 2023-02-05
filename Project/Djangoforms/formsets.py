@@ -53,7 +53,7 @@ class BaseStudentFormSet(BaseFormSet):
                 email = form.cleaned_data.get('email')
                 if email in emails:
                     raise ValidationError(_('Students cannot have the same email address.'), code="same_email")
-            emails.append(email)
+                emails.append(email)
 
 
 StudentFormset1 = formset_factory(StudentForm, formset=BaseStudentFormSet, extra=10, max_num=10, validate_max=True, min_num=1, validate_min=True, can_delete=True)

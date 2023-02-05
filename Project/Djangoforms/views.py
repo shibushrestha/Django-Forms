@@ -6,6 +6,7 @@ from .models import Student, UserProfile
 from .forms import UserRegisterForm, StudentForm, UserProfileForm
 from .modelforms import UserRegistrationForm
 from .formsets import StudentFormset, StudentFormset1
+from .modelformsets import UserProfileFormset
 
 def home(request):
     return render(request, 'Djangoforms/home.html')
@@ -69,7 +70,7 @@ def userprofile(request):
 
 
 
-# This view uses the ModelForm from modelforms.py
+# THIS VIEW USES UserRegistrationForm FROM modelforms
 
 def user_registration(request):
     user = request.user
@@ -82,17 +83,32 @@ def user_registration(request):
     return render(request, 'Djangoforms/user_registration.html', {'form':form})
 
 
-# This view is for the StudentFormset
+# THIS VIEW IS FOR THE StudentFormset
 def add_students(request):
-    student_formset = StudentFormset1(prefix='student',)
+    student_list = Student.objects.all().values('name', 'email', 'year_in_school')
+    student_formset = StudentFormset1(prefix='student', initial=student_list)
     if request.method == 'POST':
-        student_formset = StudentFormset1(request.POST, prefix='student', error_messages={'too_few_forms': 'You must at least submit one form.'})
+        student_formset = StudentFormset1(request.POST, initial=student_list, prefix='student', error_messages={'too_few_forms': 'You must at least submit one form.'})
         if student_formset.is_valid():
-            for form in student_formset.forms:
+            for form in student_formset:
                 if form.has_changed():
                     if form.is_valid():
-                        form.save()
+                        name = form.cleaned_data.get('name')
+                        email = form.cleaned_data.get('email')
+                        year_in_school = form.cleaned_data.get('year_in_school')
+                        delete = form.cleaned_data.get('DELETE')
+                        if delete == True:
+                            Student.objects.get(email=email).delete()
+                        else:
+                            student = Student.objects.create(name=name, email=email, year_in_school=year_in_school)
                     else:
                         return render(request, 'Djangoforms/add_students.html', {'student_formset':student_formset})
-            return redirect('/Djangoforms/')
+            return redirect('/Djangoforms/')      
     return render(request, 'Djangoforms/add_students.html', {'student_formset':student_formset})
+
+
+def add_userprofile(request):
+    
+    
+    userprofile_formset = UserProfileFormset()
+    return render(request, 'Djangoforms/add_userprofile.html', {'userprofile_formset':userprofile_formset})
